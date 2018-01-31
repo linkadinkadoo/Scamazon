@@ -55,15 +55,18 @@ function runSearch() {
             // }
         })
         .then(function (answer) {
+            // var idPicked;
             var queryId = "SELECT * FROM products WHERE ?";
             connection.query(queryId, { id: answer.action }, 
                 function (err, res) {
+                    // idPicked = res
                 // console.log(res[0].id);
+                amountOfProduct(res);
             })
-            amountOfProduct();
+            
         }) 
 };
-function amountOfProduct() {
+function amountOfProduct(res) {
     inquirer
     .prompt({
         name: "action",
@@ -83,19 +86,20 @@ function amountOfProduct() {
     .then(function (answer) {
         console.log('...');
         var queryId2 = "SELECT * FROM products WHERE ?";
-        connection.query(queryId2, { qty_in_stock: answer.action }, function (err, res) {
+        // connection.query(queryId2, { qty_in_stock: answer.action }, function (err, res) {
         console.log("Quantity is: " + res[0].qty_in_stock);
-        });
         updateInventory();
-    });
-};
+        });
+        
+    };
 
 function updateInventory() {
     console.log("Updating inventory...\n");
+    var amount = (res[0].qty_in_stock)-(queryId, { id: answer.action });
     var queryUpdate = connection.query("UPDATE products SET ? WHERE ?",
         [
             {
-                quantity: res[0].qty_in_stock,
+                quantity: amount
             },
             {
                 id: res[0].id
